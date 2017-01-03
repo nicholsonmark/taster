@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+    ViewBag.googlePlacesURL = System.Web.Configuration.WebConfigurationManager.AppSettings["googlePlacesURL"];
+    ViewBag.googleKey = System.Web.Configuration.WebConfigurationManager.AppSettings["googleKey"];
+
+}
+
+
+
+
+
+    <button onclick="initialise()">getLocation</button>
+
+    <p id="demo"></p>
+<div id="map_canvas"></div>
+<script type="text/javascript" src="@ViewBag.googlePlacesURL"></script>
+<script>
+    var map;
+    var latlng;
+    var myOptions;
+    function initialise() {
+        latlng = new google.maps.LatLng(-25.363882, 131.044922);
+        myOptions = {
+            zoom: 4,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.TERRAIN,
+            disableDefaultUI: true
+        }
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        doGeolocation();
+    }
+
+    function doGeolocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
+        } else {
+            positionError(-1);
+        }
+    }
+    function positionError(err) {
+        var msg;
+        switch (err.code) {
+            case err.UNKNOWN_ERROR:
+                msg = "Unable to find your location";
+                break;
+            case err.PERMISSION_DENINED:
+                msg = "Permission denied in finding your location";
+                break;
+            case err.POSITION_UNAVAILABLE:
+                msg = "Your location is currently unknown";
+                break;
+            case err.BREAK:
+                msg = "Attempt to find location took too long";
+                break;
+            default:
+                msg = "Location detection not supported in browser";
+        }
+        document.getElementById('info').innerHTML = msg;
+    }
+
+    function positionSuccess(position) {
+        // Centre the map on the new location
+        var coords = position.coords || position.coordinate || position;
+        var userLat = 44.8317116
+        var userLon = -93.3531271
+        var latLng = new google.maps.LatLng(coords.latitude, coords.longitude);
+       // var latLng = userLat + ',' + userLon
+       // console.log(latLng)
+        map.setCenter(latLng);
+        map.setZoom(12);
+        var marker = new google.maps.Marker({
+            map: map,
+            position: latLng,
+            title: 'Why, there you are!'
+        });
+        console.log(marker);
+        var request = {
+            location: latLng,
+            rankBy: google.maps.places.RankBy.DISTANCE,
+            types: ['restaurant','bar']
+        };
+        console.log(request);
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch(request, callback);
+        function callback(results, status) {
+            console.log(status);
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                    console.log(results[i]);
+                }
+            }
+        }
+
+        function createMarker(place) {
+            var placeLoc = place.geometry.location;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(place.name);
+                infowindow.open(map, this);
+            });
+        }
+    }
+ 
+     
+            
+                    // TODO Update this to call the api and pull back data needed.
+            //https://developers.google.com/places/web-service/search
+
+
+        // TODO Set these based on API call
+        var userLat = 44.8317116
+        var userLon = -93.3531271
+        var lat2 = 44.85284550000001
+        var lon2 = -93.3491993
+        
+
+        function calcDistance(lat1, lon1, lat2, lon2) {  //shows in miles, if need kilometers: dist * 1.609344
+            var radlat1 = Math.PI * lat1 / 180
+            var radlat2 = Math.PI * lat2 / 180
+            var theta = lon1 - lon2
+            var radtheta = Math.PI * theta / 180
+            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            dist = Math.acos(dist)
+            dist = dist * 180 / Math.PI
+            dist = dist * 60 * 1.1515
+            console.log(dist)
+
+            // TODO if dist is greater than 1 mile, run API again with BAR type
+        }
+
+    </script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+
+
+
