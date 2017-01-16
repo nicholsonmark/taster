@@ -92,7 +92,13 @@
                     calcDistance(userLat, userLng, establishmentLat, establishmentLng);
                     console.log(calcDistance(userLat, userLng, establishmentLat, establishmentLng) > 1);
                 } else {
-                    return;
+                    establishmentLng = results[5].geometry.viewport.b.b;
+                    establishmentLat = results[5].geometry.viewport.f.f;
+
+                    console.log('estblishlat: ' + establishmentLat + ', lng: ' + establishmentLng);
+                    console.log('userlat ' + userLat + ',userlng: ' + userLng);
+                    //calcDistance(userLat, userLng, establishmentLat, establishmentLng);
+                    console.log(calcDistance(userLat, userLng, establishmentLat, establishmentLng) > 1);
                 }
             }
         }
@@ -113,7 +119,8 @@
             dist = Math.acos(dist)
             dist = dist * 180 / Math.PI
             dist = dist * 60 * 1.1515
-            console.log('distance: ' + dist)
+            //console.log('distance: ' + dist)
+            return dist;
 
             
         }
