@@ -19,6 +19,11 @@
     var map;
     var latlng;
     var myOptions;
+    var userLat;
+    var userLng;
+    var establishmentLat;
+    var establishmentLng;
+    var resultCount = 0
     function initialise() {
         latlng = new google.maps.LatLng(-25.363882, 131.044922);
         myOptions = {
@@ -60,64 +65,43 @@
     }
 
     function positionSuccess(position) {
-        // Centre the map on the new location
+
         var coords = position.coords || position.coordinate || position;
-        var userLat = 44.8317116
-        var userLon = -93.3531271
+        userLat = coords.latitude;
+        userLng = coords.longitude;
         var latLng = new google.maps.LatLng(coords.latitude, coords.longitude);
-       // var latLng = userLat + ',' + userLon
-       // console.log(latLng)
-        map.setCenter(latLng);
-        map.setZoom(12);
-        var marker = new google.maps.Marker({
-            map: map,
-            position: latLng,
-            title: 'Why, there you are!'
-        });
-        console.log(marker);
+
         var request = {
             location: latLng,
             rankBy: google.maps.places.RankBy.DISTANCE,
             types: ['restaurant','bar']
         };
-        console.log(request);
+
         var service = new google.maps.places.PlacesService(map);
         service.nearbySearch(request, callback);
         function callback(results, status) {
-            console.log(status);
             if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    createMarker(results[i]);
-                    console.log(results[i]);
+               // for (var i = 0; i < results.length; i++) {
+                var firstResult = results[resultCount].name;
+                if (confirm('Are you at ' + firstResult)) {
+                    establishmentLng = results[resultCount].geometry.viewport.b.b;
+                    establishmentLat = results[resultCount].geometry.viewport.f.f;
+                  
+                    console.log('estblishlat: ' + establishmentLat + ', lng: ' + establishmentLng);
+                    console.log('userlat ' + userLat + ',userlng: ' + userLng);
+                    calcDistance(userLat, userLng, establishmentLat, establishmentLng);
+                    console.log(calcDistance(userLat, userLng, establishmentLat, establishmentLng) > 1);
+                } else {
+                    return;
                 }
             }
-        }
-
-        function createMarker(place) {
-            var placeLoc = place.geometry.location;
-            var marker = new google.maps.Marker({
-                map: map,
-                position: place.geometry.location
-            });
-
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.setContent(place.name);
-                infowindow.open(map, this);
-            });
         }
     }
  
      
-            
-                    // TODO Update this to call the api and pull back data needed.
-            //https://developers.google.com/places/web-service/search
 
 
-        // TODO Set these based on API call
-        var userLat = 44.8317116
-        var userLon = -93.3531271
-        var lat2 = 44.85284550000001
-        var lon2 = -93.3491993
+  
         
 
         function calcDistance(lat1, lon1, lat2, lon2) {  //shows in miles, if need kilometers: dist * 1.609344
@@ -129,9 +113,9 @@
             dist = Math.acos(dist)
             dist = dist * 180 / Math.PI
             dist = dist * 60 * 1.1515
-            console.log(dist)
+            console.log('distance: ' + dist)
 
-            // TODO if dist is greater than 1 mile, run API again with BAR type
+            
         }
 
     </script>

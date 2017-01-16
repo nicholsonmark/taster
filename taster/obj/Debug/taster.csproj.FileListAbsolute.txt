@@ -65,3 +65,11 @@ C:\dev\personal\taster\taster\bin\System.Web.WebPages.Razor.xml
 C:\dev\personal\taster\taster\obj\Debug\taster.csprojResolveAssemblyReference.cache
 C:\dev\personal\taster\taster\obj\Debug\taster.dll
 C:\dev\personal\taster\taster\obj\Debug\taster.pdb
+C:\dev\personal\taster\taster\bin\EntityFramework.dll
+C:\dev\personal\taster\taster\bin\EntityFramework.SqlServer.dll
+C:\dev\personal\taster\taster\bin\MySql.Data.dll
+C:\dev\personal\taster\taster\bin\MySql.Data.Entity.EF6.dll
+C:\dev\personal\taster\taster\bin\EntityFramework.xml
+C:\dev\personal\taster\taster\bin\EntityFramework.SqlServer.xml
+C:\dev\personal\taster\taster\bin\MySql.Data.xml
+C:\dev\personal\taster\taster\bin\MySql.Data.Entity.EF6.xml
